@@ -3,6 +3,8 @@ name: Build Android APK
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'downloads/**'
   workflow_dispatch:
 
 permissions:
@@ -85,10 +87,19 @@ jobs:
           name: X1-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
-      - name: Upload APK to GitHub Release
+      - name: Package and Release APK & ZIP
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cp android/app/build/outputs/apk/debug/app-debug.apk ./X1.apk
           cp android/app/build/outputs/apk/debug/app-debug.apk ./x1-calculator.apk
-          gh release upload v1.0.0 ./X1.apk ./x1-calculator.apk --clobber || true
+          zip -j ./X1.zip ./X1.apk
+          gh release upload v1.0.0 ./X1.apk ./x1-calculator.apk ./X1.zip --clobber || true
+          mkdir -p downloads
+          cp ./X1.apk downloads/X1.apk
+          cp ./X1.zip downloads/X1.zip
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add downloads/X1.apk downloads/X1.zip
+          git commit -m "Update X1.apk and X1.zip binary downloads [skip ci]" || true
+          git push origin main || true
