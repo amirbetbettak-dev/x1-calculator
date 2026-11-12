@@ -6,6 +6,7 @@ export interface CalcState {
   op: Op | null;
   waiting: boolean;
   expression: string;
+  liveResult: string | null;
 }
 
 export type CalcAction =
@@ -24,6 +25,7 @@ export const initialState: CalcState = {
   op: null,
   waiting: false,
   expression: "",
+  liveResult: null,
 };
 
 export function compute(a: number, b: number, op: Op): number {
@@ -46,42 +48,71 @@ export function format(n: number): string {
   return s.length > 14 ? rounded.toExponential(6) : s;
 }
 
+function updateLiveResult(state: CalcState): CalcState {
+  if (state.op !== null && state.prev !== null && !state.waiting) {
+    const current = parseFloat(state.display);
+    if (!isNaN(current)) {
+      const res = compute(state.prev, current, state.op);
+      const formatted = format(res);
+      return {
+        ...state,
+        liveResult: formatted === "Error" ? null : formatted,
+      };
+    }
+  }
+  return { ...state, liveResult: null };
+}
+
 export function calcReducer(state: CalcState, action: CalcAction): CalcState {
   const isError = state.display === "Error";
   switch (action.type) {
     case "clear":
       return initialState;
+
     case "digit": {
+      let nextDisplay: string;
       if (isError || state.waiting) {
-        return { ...state, display: action.value, waiting: false };
+        nextDisplay = action.value;
+      } else {
+        if (state.display.replace(/[-.]/g, "").length >= 14) return state;
+        nextDisplay = state.display === "0" ? action.value : state.display + action.value;
       }
-      if (state.display.replace(/[-.]/g, "").length >= 14) return state;
-      return {
+      return updateLiveResult({
         ...state,
-        display: state.display === "0" ? action.value : state.display + action.value,
-      };
+        display: nextDisplay,
+        waiting: false,
+      });
     }
+
     case "dot": {
-      if (isError || state.waiting) return { ...state, display: "0.", waiting: false };
+      if (isError || state.waiting) {
+        return updateLiveResult({ ...state, display: "0.", waiting: false });
+      }
       if (state.display.includes(".")) return state;
-      return { ...state, display: state.display + "." };
+      return updateLiveResult({ ...state, display: state.display + "." });
     }
+
     case "backspace": {
       if (isError || state.waiting) return state;
       const next = state.display.slice(0, -1);
-      return { ...state, display: next === "" || next === "-" ? "0" : next };
+      const nextDisplay = next === "" || next === "-" ? "0" : next;
+      return updateLiveResult({ ...state, display: nextDisplay });
     }
+
     case "sign": {
       if (isError || state.display === "0") return state;
-      return {
-        ...state,
-        display: state.display.startsWith("-") ? state.display.slice(1) : "-" + state.display,
-      };
+      const nextDisplay = state.display.startsWith("-")
+        ? state.display.slice(1)
+        : "-" + state.display;
+      return updateLiveResult({ ...state, display: nextDisplay });
     }
+
     case "percent": {
       if (isError) return state;
-      return { ...state, display: format(parseFloat(state.display) / 100) };
+      const nextDisplay = format(parseFloat(state.display) / 100);
+      return updateLiveResult({ ...state, display: nextDisplay });
     }
+
     case "op": {
       if (isError) return state;
       const current = parseFloat(state.display);
@@ -95,6 +126,7 @@ export function calcReducer(state: CalcState, action: CalcAction): CalcState {
           op: action.value,
           waiting: true,
           expression: `${display} ${action.value}`,
+          liveResult: null,
         };
       }
       return {
@@ -103,8 +135,10 @@ export function calcReducer(state: CalcState, action: CalcAction): CalcState {
         op: action.value,
         waiting: true,
         expression: `${format(current)} ${action.value}`,
+        liveResult: null,
       };
     }
+
     case "equals": {
       if (isError || state.op === null || state.prev === null) return state;
       const current = parseFloat(state.display);
@@ -116,6 +150,7 @@ export function calcReducer(state: CalcState, action: CalcAction): CalcState {
         op: null,
         waiting: true,
         expression: display === "Error" ? "" : `${format(state.prev)} ${state.op} ${format(current)} =`,
+        liveResult: null,
       };
     }
   }

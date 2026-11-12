@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useReducer, useState } from "react";
-import { Delete, Snowflake } from "lucide-react";
+import { Delete } from "lucide-react";
 
 import { IceKey } from "@/components/IceKey";
 import { Snowfall } from "@/components/Snowfall";
-import { calcReducer, initialState, type CalcAction, type Op } from "@/lib/calculator";
+import { calcReducer, format, initialState, type CalcAction, type Op } from "@/lib/calculator";
 
 type Key = {
   label: React.ReactNode;
@@ -72,11 +72,20 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, [press]);
 
-  const len = state.display.length;
-  const sizeClass = len > 11 ? "text-4xl" : len > 8 ? "text-5xl" : "text-6xl";
+  // Determine active expression string
+  const activeExpression =
+    state.op !== null && state.prev !== null
+      ? state.waiting
+        ? `${format(state.prev)} ${state.op}`
+        : `${format(state.prev)} ${state.op} ${state.display}`
+      : state.expression;
+
+  const targetText = state.liveResult ?? state.display;
+  const len = targetText.length;
+  const sizeClass = len > 11 ? "text-3xl sm:text-4xl" : len > 8 ? "text-4xl sm:text-5xl" : "text-5xl sm:text-6xl";
 
   return (
-    <main className="bg-sky relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10">
+    <main className="bg-sky relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-8 select-none">
       <div aria-hidden className="float-blob absolute -left-24 -top-24 h-80 w-80 rounded-full bg-glacier/60 blur-3xl" />
       <div
         aria-hidden
@@ -85,30 +94,47 @@ export default function App() {
       />
       <Snowfall />
 
-      <section className="ice-shell relative z-10 w-full max-w-sm rounded-[2.25rem] p-5 sm:p-6">
+      <section className="ice-shell relative z-10 w-full max-w-sm sm:max-w-md rounded-[2.5rem] p-5 sm:p-7 shadow-2xl">
         <header className="mb-4 flex items-center justify-between px-1">
-          <div className="flex items-center gap-2">
-            <Snowflake className="h-5 w-5 text-primary" strokeWidth={1.75} />
-            <h1 className="font-display text-xl font-semibold tracking-tight text-foreground">x1</h1>
+          <div className="flex items-center gap-3">
+            <img
+              src="/icon.png"
+              alt="X1"
+              className="h-10 w-10 rounded-2xl object-cover shadow-md ring-2 ring-white/70"
+            />
+            <h1 className="font-display text-2xl font-bold tracking-wider text-foreground">X1</h1>
           </div>
-          <span className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">frost</span>
         </header>
 
-        <div className="ice-screen mb-5 flex h-36 flex-col items-end justify-end overflow-hidden rounded-3xl px-5 py-4">
-          <div className="h-6 truncate text-sm text-muted-foreground" aria-live="polite">
-            {state.expression}
+        {/* Enlarged Calculation Display with Live Instant Preview */}
+        <div className="ice-screen mb-5 flex min-h-[10.5rem] sm:min-h-[11.5rem] flex-col items-end justify-between overflow-hidden rounded-3xl px-5 py-4">
+          <div className="w-full text-right text-sm sm:text-base font-medium text-muted-foreground/90 truncate tracking-wide" aria-live="polite">
+            {activeExpression || " "}
           </div>
-          <div
-            key={pulse}
-            className={`display-pop w-full truncate text-right font-light tabular-nums text-foreground ${sizeClass}`}
-            aria-live="polite"
-            data-testid="display"
-          >
-            {state.display}
+
+          <div className="flex w-full flex-col items-end justify-end gap-1">
+            {state.liveResult && (
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-muted-foreground/75">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                <span>محاسبه لحظه‌ای</span>
+              </div>
+            )}
+            <div
+              key={pulse}
+              className={`display-pop w-full truncate text-right font-light tabular-nums transition-all ${
+                state.liveResult
+                  ? "text-primary font-semibold drop-shadow-[0_0_16px_rgba(100,180,255,0.45)]"
+                  : "text-foreground"
+              } ${sizeClass}`}
+              aria-live="polite"
+              data-testid="display"
+            >
+              {state.liveResult ? `= ${state.liveResult}` : state.display}
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-4 gap-3 sm:gap-3.5">
           {keys.map((k, i) => (
             <IceKey
               key={i}
@@ -127,9 +153,9 @@ export default function App() {
           type="button"
           onClick={() => press({ type: "backspace" })}
           aria-label="Delete last digit"
-          className="mx-auto mt-4 flex items-center gap-1.5 rounded-full px-3 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          className="mx-auto mt-4 flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground transition-all hover:text-foreground active:scale-95 touch-manipulation cursor-pointer"
         >
-          <Delete className="h-3.5 w-3.5" /> delete
+          <Delete className="h-4 w-4" /> پاک کردن رقم آخر
         </button>
       </section>
     </main>
