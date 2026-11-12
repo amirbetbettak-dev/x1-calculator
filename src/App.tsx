@@ -50,6 +50,47 @@ const keyMap: Record<string, CalcAction> = {
   Backspace: { type: "backspace" },
 };
 
+function formatDisplayNumber(val: string): string {
+  if (!val || val === "Error" || val.includes("e") || val.includes("E")) {
+    return val;
+  }
+  const isNegative = val.startsWith("-");
+  const unsigned = isNegative ? val.slice(1) : val;
+  const [intPart, decPart] = unsigned.split(".", 2);
+  let formattedInt = intPart;
+  try {
+    if (intPart) {
+      formattedInt = Number(intPart).toLocaleString("en-US");
+    } else {
+      formattedInt = "0";
+    }
+  } catch {
+    formattedInt = intPart;
+  }
+  const prefix = isNegative ? "-" : "";
+  if (decPart !== undefined) {
+    return `${prefix}${formattedInt}.${decPart}`;
+  }
+  return `${prefix}${formattedInt}`;
+}
+
+function getDisplayFontSize(text: string): string {
+  const len = text.replace(/,/g, "").length;
+  if (len <= 6) return "text-3xl sm:text-4xl";
+  if (len <= 9) return "text-2xl sm:text-3xl";
+  if (len <= 12) return "text-xl sm:text-2xl";
+  if (len <= 15) return "text-lg sm:text-xl";
+  return "text-base sm:text-lg";
+}
+
+function formatExpression(expr: string): string {
+  if (!expr) return "";
+  return expr
+    .split(" ")
+    .map((token) => (/^-?\d+(\.\d+)?$/.test(token) ? formatDisplayNumber(token) : token))
+    .join(" ");
+}
+
 export default function App() {
   const [state, dispatch] = useReducer(calcReducer, initialState);
   const [pulse, setPulse] = useState(0);
@@ -80,12 +121,8 @@ export default function App() {
         : `${format(state.prev)} ${state.op} ${state.display}`
       : state.expression;
 
-  const targetText = state.liveResult ?? state.display;
-  const len = targetText.length;
-  const sizeClass = len > 11 ? "text-3xl sm:text-4xl" : len > 8 ? "text-4xl sm:text-5xl" : "text-5xl sm:text-6xl";
-
   return (
-    <main className="bg-sky relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-8 select-none">
+    <main className="bg-sky relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-6 select-none">
       <div aria-hidden className="float-blob absolute -left-24 -top-24 h-80 w-80 rounded-full bg-glacier/60 blur-3xl" />
       <div
         aria-hidden
@@ -106,31 +143,52 @@ export default function App() {
           </div>
         </header>
 
-        {/* Enlarged Calculation Display with Live Instant Preview */}
-        <div className="ice-screen mb-5 flex min-h-[10.5rem] sm:min-h-[11.5rem] flex-col items-end justify-between overflow-hidden rounded-3xl px-5 py-4">
-          <div className="w-full text-right text-sm sm:text-base font-medium text-muted-foreground/90 truncate tracking-wide" aria-live="polite">
-            {activeExpression || " "}
+        {/* Enlarged Calculation Display with Balanced Responsive Sizing */}
+        <div className="ice-screen mb-5 flex min-h-[11.5rem] sm:min-h-[12.5rem] flex-col justify-between overflow-hidden rounded-3xl p-4 sm:p-5 shadow-inner">
+          {/* Top Row: Full Formula / Calculation Expression */}
+          <div
+            className="w-full text-right text-sm sm:text-base font-normal text-muted-foreground/80 overflow-x-auto whitespace-nowrap scrollbar-none tracking-wide"
+            dir="ltr"
+            aria-live="polite"
+          >
+            {activeExpression ? formatExpression(activeExpression) : " "}
           </div>
 
-          <div className="flex w-full flex-col items-end justify-end gap-1">
-            {state.liveResult && (
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-muted-foreground/75">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                <span>محاسبه لحظه‌ای</span>
-              </div>
-            )}
+          {/* Center Row: Current Number (Responsive Sizing, No Truncation) */}
+          <div className="my-auto w-full overflow-x-auto whitespace-nowrap scrollbar-none py-1">
             <div
               key={pulse}
-              className={`display-pop w-full truncate text-right font-light tabular-nums transition-all ${
-                state.liveResult
-                  ? "text-primary font-semibold drop-shadow-[0_0_16px_rgba(100,180,255,0.45)]"
-                  : "text-foreground"
-              } ${sizeClass}`}
+              className={`display-pop w-full text-right font-light tracking-tight tabular-nums transition-all text-foreground ${getDisplayFontSize(
+                state.display
+              )}`}
+              dir="ltr"
               aria-live="polite"
               data-testid="display"
             >
-              {state.liveResult ? `= ${state.liveResult}` : state.display}
+              {formatDisplayNumber(state.display)}
             </div>
+          </div>
+
+          {/* Bottom Row: Instant Calculation Live Result */}
+          <div className="min-h-[1.75rem] flex items-center justify-between w-full pt-1.5 border-t border-white/20">
+            {state.liveResult ? (
+              <>
+                <span className="flex items-center gap-1.5 text-[11px] sm:text-xs font-medium text-primary/80 select-none">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  محاسبه لحظه‌ای
+                </span>
+                <span
+                  className="text-base sm:text-lg font-semibold text-primary drop-shadow-[0_0_12px_rgba(100,180,255,0.45)] tabular-nums overflow-x-auto whitespace-nowrap scrollbar-none"
+                  dir="ltr"
+                >
+                  = {formatDisplayNumber(state.liveResult)}
+                </span>
+              </>
+            ) : (
+              <span className="text-[11px] text-muted-foreground/40 italic select-none">
+                {state.op ? "در حال ورود رقم بعدی..." : "آماده محاسبه"}
+              </span>
+            )}
           </div>
         </div>
 
@@ -157,6 +215,12 @@ export default function App() {
         >
           <Delete className="h-4 w-4" /> پاک کردن رقم آخر
         </button>
+
+        {/* Subtle Creator Credit in Corner */}
+        <footer className="mt-3 flex items-center justify-between px-3 text-[11px] text-muted-foreground/50 tracking-wide select-none">
+          <span>سازنده: غلامی</span>
+          <span className="text-[10px] opacity-60">X1 v1.1</span>
+        </footer>
       </section>
     </main>
   );
