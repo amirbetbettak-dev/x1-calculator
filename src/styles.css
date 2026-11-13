@@ -36,35 +36,22 @@
   --color-ring-offset-background: var(--background);
   --color-frost: var(--frost);
   --color-glacier: var(--glacier);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 :root {
   --radius: 1.25rem;
   --background: oklch(0.95 0.025 225);
-  --foreground: oklch(0.32 0.07 240);
+  --foreground: oklch(0.28 0.07 240);
   --card: oklch(0.99 0.01 220 / 55%);
-  --card-foreground: oklch(0.32 0.07 240);
+  --card-foreground: oklch(0.28 0.07 240);
   --popover: oklch(0.99 0.01 220);
-  --popover-foreground: oklch(0.32 0.07 240);
-  --primary: oklch(0.68 0.13 230);
+  --popover-foreground: oklch(0.28 0.07 240);
+  --primary: oklch(0.65 0.14 230);
   --primary-foreground: oklch(0.99 0.01 220);
   --secondary: oklch(0.9 0.04 220);
   --secondary-foreground: oklch(0.4 0.08 240);
   --muted: oklch(0.92 0.03 222);
-  --muted-foreground: oklch(0.55 0.06 235);
+  --muted-foreground: oklch(0.52 0.06 235);
   --accent: oklch(0.82 0.09 210);
   --accent-foreground: oklch(0.3 0.07 240);
   --destructive: oklch(0.65 0.17 15);
@@ -75,39 +62,38 @@
   --frost: oklch(1 0 0);
   --glacier: oklch(0.86 0.07 215);
 
+  /* Winter Palettes */
   --gradient-sky: radial-gradient(ellipse at 20% 0%, oklch(0.97 0.03 210) 0%, transparent 55%),
     radial-gradient(ellipse at 90% 100%, oklch(0.84 0.08 235) 0%, transparent 60%),
     linear-gradient(160deg, oklch(0.95 0.03 215), oklch(0.88 0.06 230));
-  --gradient-ice-key: linear-gradient(155deg, oklch(1 0 0 / 85%), oklch(0.93 0.035 220 / 60%));
-  --gradient-ice-op: linear-gradient(155deg, oklch(0.88 0.08 215 / 90%), oklch(0.76 0.11 228 / 85%));
-  --gradient-ice-eq: linear-gradient(155deg, oklch(0.78 0.12 215), oklch(0.6 0.15 240));
-  --shadow-key: 0 8px 18px -8px oklch(0.55 0.12 235 / 45%), inset 0 1px 0 oklch(1 0 0 / 95%),
-    inset 0 -2px 6px oklch(0.75 0.08 225 / 35%);
-  --shadow-shell: 0 40px 80px -30px oklch(0.45 0.12 240 / 45%), inset 0 1px 0 oklch(1 0 0 / 90%);
+  --gradient-ice-key: linear-gradient(155deg, oklch(1 0 0 / 88%), oklch(0.93 0.035 220 / 65%));
+  --gradient-ice-op: linear-gradient(155deg, oklch(0.88 0.08 215 / 90%), oklch(0.74 0.12 228 / 85%));
+  --gradient-ice-eq: linear-gradient(155deg, oklch(0.76 0.13 215), oklch(0.58 0.16 240));
+  --shadow-key: 0 6px 14px -6px oklch(0.55 0.12 235 / 40%), inset 0 1px 0 oklch(1 0 0 / 95%),
+    inset 0 -2px 5px oklch(0.75 0.08 225 / 30%);
+  --shadow-shell: 0 35px 70px -25px oklch(0.45 0.12 240 / 38%), inset 0 1px 0 oklch(1 0 0 / 90%);
 }
 
-.dark {
-  --background: oklch(0.22 0.05 245);
-  --foreground: oklch(0.95 0.02 220);
-  --card: oklch(0.3 0.05 240 / 55%);
-  --card-foreground: oklch(0.95 0.02 220);
-  --popover: oklch(0.28 0.05 240);
-  --popover-foreground: oklch(0.95 0.02 220);
-  --primary: oklch(0.78 0.11 215);
-  --primary-foreground: oklch(0.2 0.05 245);
-  --secondary: oklch(0.32 0.05 240);
-  --secondary-foreground: oklch(0.95 0.02 220);
-  --muted: oklch(0.3 0.04 240);
-  --muted-foreground: oklch(0.75 0.04 225);
-  --accent: oklch(0.5 0.1 225);
-  --accent-foreground: oklch(0.97 0.01 220);
-  --destructive: oklch(0.7 0.17 15);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(1 0 0 / 15%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.7 0.1 220);
-  --frost: oklch(1 0 0);
-  --glacier: oklch(0.5 0.1 225);
+/* Summer Theme Mode */
+[data-season="summer"] {
+  --background: oklch(0.96 0.03 75);
+  --foreground: oklch(0.28 0.08 45);
+  --primary: oklch(0.7 0.17 55);
+  --primary-foreground: oklch(0.99 0.01 50);
+  --muted-foreground: oklch(0.55 0.07 50);
+  --border: oklch(1 0 0 / 75%);
+  --ring: oklch(0.75 0.16 65);
+  --glacier: oklch(0.92 0.09 75);
+
+  --gradient-sky: radial-gradient(ellipse at 20% 0%, oklch(0.98 0.06 85) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 100%, oklch(0.86 0.15 45) 0%, transparent 60%),
+    linear-gradient(160deg, oklch(0.96 0.05 85), oklch(0.89 0.11 60));
+  --gradient-ice-key: linear-gradient(155deg, oklch(1 0 0 / 90%), oklch(0.97 0.04 75 / 70%));
+  --gradient-ice-op: linear-gradient(155deg, oklch(0.9 0.12 65 / 92%), oklch(0.8 0.17 50 / 88%));
+  --gradient-ice-eq: linear-gradient(155deg, oklch(0.82 0.18 55), oklch(0.66 0.22 35));
+  --shadow-key: 0 6px 14px -6px oklch(0.6 0.16 45 / 35%), inset 0 1px 0 oklch(1 0 0 / 95%),
+    inset 0 -2px 5px oklch(0.8 0.1 65 / 25%);
+  --shadow-shell: 0 35px 70px -25px oklch(0.55 0.15 45 / 32%), inset 0 1px 0 oklch(1 0 0 / 90%);
 }
 
 @layer base {
@@ -125,23 +111,32 @@
   }
 }
 
-/* ---------- Icy calculator ---------- */
+/* ---------- Calculator Shell & Screen ---------- */
 @utility bg-sky {
   background: var(--gradient-sky);
 }
 
 @utility ice-shell {
-  background: linear-gradient(160deg, oklch(1 0 0 / 55%), oklch(0.93 0.04 220 / 35%));
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  background: linear-gradient(160deg, oklch(1 0 0 / 58%), oklch(0.94 0.035 220 / 38%));
+  backdrop-filter: blur(28px) saturate(145%);
+  -webkit-backdrop-filter: blur(28px) saturate(145%);
   border: 1px solid oklch(1 0 0 / 75%);
   box-shadow: var(--shadow-shell);
 }
 
+[data-season="summer"] .ice-shell {
+  background: linear-gradient(160deg, oklch(1 0 0 / 62%), oklch(0.97 0.04 75 / 42%));
+}
+
 @utility ice-screen {
-  background: linear-gradient(180deg, oklch(0.97 0.02 215 / 75%), oklch(0.9 0.05 222 / 60%));
-  box-shadow: inset 0 2px 12px oklch(0.6 0.1 235 / 22%), inset 0 -1px 0 oklch(1 0 0 / 85%);
-  border: 1px solid oklch(1 0 0 / 60%);
+  background: linear-gradient(180deg, oklch(0.98 0.015 215 / 80%), oklch(0.91 0.045 222 / 65%));
+  box-shadow: inset 0 2px 10px oklch(0.6 0.1 235 / 20%), inset 0 -1px 0 oklch(1 0 0 / 85%);
+  border: 1px solid oklch(1 0 0 / 65%);
+}
+
+[data-season="summer"] .ice-screen {
+  background: linear-gradient(180deg, oklch(0.99 0.02 85 / 82%), oklch(0.93 0.06 70 / 65%));
+  box-shadow: inset 0 2px 10px oklch(0.7 0.12 50 / 18%), inset 0 -1px 0 oklch(1 0 0 / 85%);
 }
 
 @utility ice-key {
@@ -151,44 +146,44 @@
   background: var(--key-bg, var(--gradient-ice-key));
   border: 1px solid oklch(1 0 0 / 85%);
   box-shadow: var(--shadow-key);
-  transition: transform 0.07s cubic-bezier(0.2, 0.8, 0.4, 1), box-shadow 0.07s ease, filter 0.07s ease;
+  transition: transform 0.06s cubic-bezier(0.2, 0.8, 0.4, 1), box-shadow 0.06s ease, filter 0.06s ease;
   touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
 
-  /* moving glint */
+  /* moving glass glint */
   &::before {
     content: "";
     position: absolute;
     inset: -40% -60%;
     background: linear-gradient(115deg, transparent 40%, oklch(1 0 0 / 85%) 50%, transparent 60%);
     transform: translateX(-70%);
-    transition: transform 0.4s ease;
+    transition: transform 0.35s ease;
     z-index: -1;
     pointer-events: none;
   }
-  /* frost top-edge */
+  /* top-edge highlight */
   &::after {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: radial-gradient(circle at 30% 0%, oklch(1 0 0 / 90%), transparent 55%);
-    opacity: 0.7;
+    background: radial-gradient(circle at 30% 0%, oklch(1 0 0 / 92%), transparent 55%);
+    opacity: 0.75;
     z-index: -1;
     pointer-events: none;
   }
   &:hover {
     transform: translateY(-1px);
-    filter: brightness(1.03);
+    filter: brightness(1.02);
   }
   &:hover::before {
     transform: translateX(70%);
   }
   &:active,
   &[data-pressed="true"] {
-    transform: scale(0.92);
-    box-shadow: 0 1px 4px -1px oklch(0.55 0.12 235 / 45%), inset 0 2px 6px oklch(0.6 0.1 230 / 35%);
+    transform: scale(0.93);
+    box-shadow: 0 1px 3px -1px oklch(0.55 0.12 235 / 35%), inset 0 2px 5px oklch(0.6 0.1 230 / 30%);
   }
 }
 
@@ -204,45 +199,80 @@
 }
 
 @utility ice-key-fn {
-  --key-bg: linear-gradient(155deg, oklch(0.95 0.03 215 / 80%), oklch(0.88 0.05 222 / 60%));
+  --key-bg: linear-gradient(155deg, oklch(0.96 0.025 215 / 82%), oklch(0.89 0.045 222 / 65%));
   color: var(--muted-foreground);
 }
 
-/* crack / frost burst injected on press */
+[data-season="summer"] .ice-key-fn {
+  --key-bg: linear-gradient(155deg, oklch(0.98 0.03 80 / 85%), oklch(0.92 0.06 65 / 65%));
+}
+
+/* Animations & Particles */
 .frost-burst {
   position: absolute;
   border-radius: 9999px;
   pointer-events: none;
   background: radial-gradient(circle, oklch(1 0 0 / 95%) 0%, oklch(0.9 0.06 215 / 60%) 35%, transparent 70%);
   transform: translate(-50%, -50%) scale(0);
-  animation: frost-burst 0.4s ease-out forwards;
+  animation: frost-burst 0.38s ease-out forwards;
   z-index: 0;
 }
 
 .ice-shard {
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   pointer-events: none;
   background: oklch(1 0 0);
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
-  box-shadow: 0 0 6px oklch(0.85 0.08 215);
-  animation: ice-shard 0.45s ease-out forwards;
+  box-shadow: 0 0 5px oklch(0.85 0.08 215);
+  animation: ice-shard 0.42s ease-out forwards;
   z-index: 1;
 }
 
+/* Realistic Snowflakes */
 .snowflake {
   position: absolute;
-  top: -5vh;
+  top: -4vh;
   border-radius: 9999px;
-  background: oklch(1 0 0 / 85%);
-  filter: blur(0.5px);
+  background: oklch(1 0 0 / 90%);
+  filter: blur(0.3px);
   animation: snow-fall linear infinite;
   pointer-events: none;
 }
 
+.snowflake-near {
+  filter: blur(0.8px);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.7);
+}
+
+.snowflake-far {
+  filter: blur(1.2px);
+  opacity: 0.35;
+}
+
+/* Summer Sparkles */
+.summer-sparkle {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, oklch(1 0.1 75 / 90%) 0%, oklch(0.9 0.15 60 / 60%) 50%, transparent 80%);
+  box-shadow: 0 0 8px oklch(0.88 0.18 65 / 65%);
+  animation: summer-float ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+/* Melting droplets */
+.melt-drip {
+  animation: drip-pulse 4.5s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+.glimmer {
+  animation: glimmer-shine 3.2s ease-in-out infinite;
+}
+
 .display-pop {
-  animation: display-pop 0.15s ease-out;
+  animation: display-pop 0.12s ease-out;
 }
 
 @keyframes frost-burst {
@@ -269,20 +299,70 @@
     box-shadow: var(--shadow-key), 0 0 0 0 oklch(0.8 0.1 215 / 0%);
   }
   50% {
-    box-shadow: var(--shadow-key), 0 0 24px 2px oklch(0.8 0.1 215 / 55%);
+    box-shadow: var(--shadow-key), 0 0 20px 2px oklch(0.8 0.1 215 / 50%);
+  }
+}
+
+[data-season="summer"] .ice-key-eq {
+  animation: summer-breathe 3.5s ease-in-out infinite;
+}
+
+@keyframes summer-breathe {
+  0%,
+  100% {
+    box-shadow: var(--shadow-key), 0 0 0 0 oklch(0.85 0.18 55 / 0%);
+  }
+  50% {
+    box-shadow: var(--shadow-key), 0 0 20px 2px oklch(0.85 0.18 55 / 45%);
   }
 }
 
 @keyframes snow-fall {
   to {
-    transform: translate3d(var(--drift, 20px), 110vh, 0);
+    transform: translate3d(var(--drift, 20px), 112vh, 0);
+  }
+}
+
+@keyframes summer-float {
+  0% {
+    transform: translate(0, 0) scale(0.8);
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(15px, -25px) scale(1.2);
+    opacity: 0.4;
+  }
+}
+
+@keyframes drip-pulse {
+  0%, 100% {
+    transform: scaleY(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleY(1.4);
+    opacity: 0.95;
+  }
+}
+
+@keyframes glimmer-shine {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
   }
 }
 
 @keyframes display-pop {
   0% {
     transform: translateY(2px);
-    opacity: 0.6;
+    opacity: 0.7;
   }
   100% {
     transform: translateY(0);
@@ -306,8 +386,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .snowflake,
+  .summer-sparkle,
   .float-blob,
-  .ice-key-eq {
+  .ice-key-eq,
+  .melt-drip,
+  .glimmer {
     animation: none;
   }
 }

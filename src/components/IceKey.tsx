@@ -17,13 +17,14 @@ interface IceKeyProps {
   className?: string | undefined;
   label?: string | undefined;
   active?: boolean | undefined;
+  hapticEnabled?: boolean | undefined;
 }
 
 export function spawnFrost(el: HTMLElement, x?: number, y?: number) {
   const rect = el.getBoundingClientRect();
   const cx = x ?? rect.width / 2;
   const cy = y ?? rect.height / 2;
-  const size = Math.max(rect.width, rect.height) * 1.8;
+  const size = Math.max(rect.width, rect.height) * 1.6;
 
   const burst = document.createElement("span");
   burst.className = "frost-burst";
@@ -38,7 +39,7 @@ export function spawnFrost(el: HTMLElement, x?: number, y?: number) {
     const shard = document.createElement("span");
     shard.className = "ice-shard";
     const angle = (Math.PI * 2 * i) / 3 + Math.random() * 0.4;
-    const dist = 18 + Math.random() * 12;
+    const dist = 16 + Math.random() * 10;
     shard.style.left = `${cx - 3}px`;
     shard.style.top = `${cy - 3}px`;
     shard.style.setProperty("--dx", `${Math.cos(angle) * dist}px`);
@@ -48,11 +49,19 @@ export function spawnFrost(el: HTMLElement, x?: number, y?: number) {
   }
 }
 
-export function IceKey({ children, onPress, variant = "num", className, label, active }: IceKeyProps) {
+export function IceKey({
+  children,
+  onPress,
+  variant = "num",
+  className,
+  label,
+  active,
+  hapticEnabled = true,
+}: IceKeyProps) {
   const ref = useRef<HTMLButtonElement>(null);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+    if (hapticEnabled && typeof navigator !== "undefined" && "vibrate" in navigator) {
       try {
         navigator.vibrate(10);
       } catch {}
@@ -70,12 +79,12 @@ export function IceKey({ children, onPress, variant = "num", className, label, a
       onPointerDown={handlePointerDown}
       onClick={onPress}
       className={cn(
-        "ice-key flex h-16 select-none items-center justify-center rounded-2xl text-2xl font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-[4.75rem] sm:text-3xl touch-manipulation cursor-pointer",
+        "ice-key flex h-[3.4rem] sm:h-[4.1rem] select-none items-center justify-center rounded-2xl text-xl sm:text-2xl font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring touch-manipulation cursor-pointer",
         variantClass[variant],
         className,
       )}
     >
-      <span className="relative z-[2] pointer-events-none">{children}</span>
+      <span className="relative z-[2] pointer-events-none flex items-center justify-center">{children}</span>
     </button>
   );
 }
